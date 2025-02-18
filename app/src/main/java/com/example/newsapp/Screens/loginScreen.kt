@@ -29,13 +29,16 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.newsapp.topNewsScreen
 import com.example.newsapp.ui.theme.NewsAppTheme
 
 @Composable
-fun loginScreen(){
+fun loginScreen(
+    navController: NavController
+){
     var loginText by rememberSaveable { mutableStateOf("")}
     var passwordText by rememberSaveable { mutableStateOf("")}
-    Log.i("Theme", MaterialTheme.colorScheme.primary.toString())
         Column(
             Modifier
                 .fillMaxSize()
@@ -80,7 +83,9 @@ fun loginScreen(){
                     modifier = Modifier
                         .size(143.dp,51.dp),
                     shape = RectangleShape,
-                    onClick = { }
+                    onClick = {
+                        navController.navigate(topNewsScreen)
+                    }
                 ) {
                     Text("Login")
              }
@@ -89,8 +94,3 @@ fun loginScreen(){
         }
 }
 
-@Composable
-@Preview
-fun showLoginScreen(){
-    loginScreen()
-}
