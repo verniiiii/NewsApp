@@ -35,7 +35,6 @@ fun newsCard(
     onClick: () -> Unit,
     onMoreClick: () -> Unit,
 ) {
-    val context = LocalContext.current
 
     Card(
         modifier = Modifier.padding(10.dp),
