@@ -26,6 +26,10 @@ class topNewsViewModel(
     private val _isLoading = MutableStateFlow<Boolean>(false)
     val isLoading : MutableStateFlow<Boolean> = _isLoading
 
+    private val _findnewsArticleld = MutableStateFlow<List<Article>>(emptyList())
+    val findnewsArticleld : StateFlow<List<Article>> = _findnewsArticleld
+
+
     fun fetchNews(page : Int = 1) {
         viewModelScope.launch {
             _isLoading.value = true
@@ -47,4 +51,26 @@ class topNewsViewModel(
             _isLoading.value = false
         }
     }
+
+    fun findNews(query : String){
+        viewModelScope.launch{
+            _isLoading.value = true
+            val response = newsApi.searchForNews(apiKey = ConstValue.API_KEY, searchQuery = query)
+            try{
+                if(response.isSuccessful){
+                    response.body()?.let {
+                        _findnewsArticleld.value = it.articles
+                    }
+                }else {
+                    Log.i("ERROR", "Response Error: ${response.code()}")
+                }
+            }catch (e: HttpException) {
+                Log.i("ERROR", "HttpException: ${e.code()}")
+            } catch (e: Exception ) {
+                Log.i("ERROR", "General Error: ${e.message}")
+            }
+            _isLoading.value = false
+        }
+    }
+
 }

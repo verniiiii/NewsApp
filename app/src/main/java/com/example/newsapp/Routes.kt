@@ -8,3 +8,6 @@ object loginScreen
 
 @Serializable
 object topNewsScreen
+
+@Serializable
+object searchNews
