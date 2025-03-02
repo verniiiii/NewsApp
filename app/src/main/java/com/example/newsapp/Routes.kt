@@ -11,3 +11,6 @@ object topNewsScreen
 
 @Serializable
 object searchNews
+
+@Serializable
+object registerScreen
