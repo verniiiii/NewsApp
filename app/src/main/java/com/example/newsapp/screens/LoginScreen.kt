@@ -15,14 +15,15 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 import com.example.newsapp.viewmodels.AuthViewModel
+import org.koin.androidx.compose.koinViewModel
 
 
 @Composable
 fun LoginScreen(
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel = koinViewModel()
 ) {
     val context = LocalContext.current
-    val authViewModel: AuthViewModel = remember { AuthViewModel(context) }
 
     var loginText by rememberSaveable { mutableStateOf("") }
     var passwordText by rememberSaveable { mutableStateOf("") }
@@ -67,14 +68,15 @@ fun LoginScreen(
                 modifier = Modifier.size(143.dp, 51.dp),
                 shape = RectangleShape,
                 onClick = {
-                    // Логика для авторизации
-                    authViewModel.loginUser(loginText, passwordText) { success ->
-                        if (success) {
-                            navController.navigate("top_news_screen") // Переход на экран новостей
-                        } else {
-                            Toast.makeText(context, "Invalid login or password", Toast.LENGTH_SHORT).show()
+                    authViewModel.loginUser(loginText, passwordText) { result ->
+                        result.onSuccess { message ->
+                            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+                            navController.navigate("Top_news_screen")
+                        }.onFailure { error ->
+                            Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
                         }
                     }
+
                 }
             ) {
                 Text("Login")

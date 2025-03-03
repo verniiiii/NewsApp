@@ -23,14 +23,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.newsapp.viewmodels.topNewsViewModel
+import com.example.newsapp.viewmodels.TopNewsViewModel
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 
 @Composable
-fun searchNews(
-    viewModel: topNewsViewModel = koinViewModel()
+fun SearchNews(
+    viewModel: TopNewsViewModel = koinViewModel()
 ){
         val newArticle = viewModel.findnewsArticleld.collectAsState()
         val isLoading = viewModel.isLoading.collectAsState()

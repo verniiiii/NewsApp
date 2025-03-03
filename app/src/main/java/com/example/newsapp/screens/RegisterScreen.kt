@@ -2,10 +2,7 @@ package com.example.newsapp.screens
 
 import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.newsapp.data.AppDatabase
 import com.example.newsapp.viewmodels.AuthViewModel
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -15,28 +12,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-
-
 import android.util.Patterns
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun RegisterScreen(navController: NavController) {
-    // Получаем контекст и создаем AuthViewModel
+fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = koinViewModel()) {
     val context = LocalContext.current
-    val authViewModel: AuthViewModel = remember { AuthViewModel(context) }
 
     var login by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginError by remember { mutableStateOf("") }
     var passwordError by remember { mutableStateOf("") }
+    var registerError by remember { mutableStateOf("") } // Для отображения ошибки регистрации
 
-    // Валидация логина и пароля
     fun validateInputs(): Boolean {
         var valid = true
 
         // Валидация логина (почта)
         if (!Patterns.EMAIL_ADDRESS.matcher(login).matches()) {
-            loginError = "Invalid email format"
+            loginError = "Неверный формат email"
             valid = false
         } else {
             loginError = ""
@@ -44,7 +38,7 @@ fun RegisterScreen(navController: NavController) {
 
         // Валидация пароля
         if (password.length < 4) {
-            passwordError = "Password must be at least 4 characters"
+            passwordError = "Пароль должен быть минимум 4 символа"
             valid = false
         } else {
             passwordError = ""
@@ -67,7 +61,7 @@ fun RegisterScreen(navController: NavController) {
             isError = loginError.isNotEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(bottom = 8.dp)
         )
         if (loginError.isNotEmpty()) {
             Text(text = loginError, color = MaterialTheme.colorScheme.error)
@@ -76,32 +70,41 @@ fun RegisterScreen(navController: NavController) {
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Password") },
+            label = { Text("Пароль") },
             visualTransformation = PasswordVisualTransformation(),
             isError = passwordError.isNotEmpty(),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(bottom = 8.dp)
         )
         if (passwordError.isNotEmpty()) {
             Text(text = passwordError, color = MaterialTheme.colorScheme.error)
         }
 
+        // Показываем ошибку регистрации
+        if (registerError.isNotEmpty()) {
+            Text(
+                text = registerError,
+                color = MaterialTheme.colorScheme.error,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
         Button(
             onClick = {
                 if (validateInputs()) {
-                    authViewModel.registerUser(login, password) { success ->
-                        if (success) {
-                            navController.navigate("login_screen") // Переход на экран логина
-                        } else {
-                            Toast.makeText(context, "Registration failed", Toast.LENGTH_SHORT).show()
+                    authViewModel.registerUser(login, password) { result ->
+                        result.onSuccess {
+                            navController.navigate("login_screen")
+                        }.onFailure { error ->
+                            registerError = error.message ?: "Ошибка регистрации"
                         }
                     }
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Register")
+            Text("Зарегистрироваться")
         }
     }
 }
