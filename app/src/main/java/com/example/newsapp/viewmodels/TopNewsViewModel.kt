@@ -20,8 +20,7 @@ import retrofit2.HttpException
 
 class TopNewsViewModel(
     private val newsApi : NewsApi,
-    private val mainDb: MainDb,
-    private val userPreferences: UserPreferences,
+
 ): ViewModel(){
 
     private val _newsArticleld = MutableStateFlow<List<Article>>(emptyList())
@@ -79,23 +78,7 @@ class TopNewsViewModel(
 
 
 
-    fun addArticleToDb(article : Article){
-        viewModelScope.launch{
-            val articleWithOwner = article.copy(owner = userPreferences.userId.first()!!)
-            mainDb.dao.addArticleToDb(articleWithOwner)
-        }
-    }
 
-    fun getAllArticle(): Flow<List<Article>> {
-        val ownerId = runBlocking { userPreferences.userId.first()!! } // Получаем userId синхронно
-        return mainDb.dao.getAllByOwner(ownerId)
-    }
-
-    fun deleteArticle(url : String){
-        viewModelScope.launch{
-            mainDb.dao.deleteArticle(url,userPreferences.userId.first()!!)
-        }
-    }
 
 
 }

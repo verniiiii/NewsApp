@@ -14,13 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.newsapp.viewmodels.CardViewModel
 import com.example.newsapp.viewmodels.TopNewsViewModel
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun SavedNewsScr(
-    viewModel: TopNewsViewModel = koinViewModel(),
+    navController: NavController,
+    viewModel: CardViewModel = koinViewModel(),
 ) {
 
     val savedArticles by viewModel.getAllArticle().collectAsState(initial = emptyList())
@@ -29,10 +31,7 @@ fun SavedNewsScr(
         items(savedArticles){
             article ->
             newsCard(article,
-                onClick = {},
-                onMoreClick = {
-                    viewModel.deleteArticle(article.url)
-                }
+                navController = navController
             )
         }
     }

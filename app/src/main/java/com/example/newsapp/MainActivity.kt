@@ -7,12 +7,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.example.newsapp.data.UserPreferences
 import com.example.newsapp.screens.LoginScreen
 import com.example.newsapp.screens.RegisterScreen
 import com.example.newsapp.screens.SavedNewsScr
 import com.example.newsapp.screens.SearchNews
 import com.example.newsapp.screens.TopNewsScreen
+import com.example.newsapp.screens.webViewScreen
 import com.example.newsapp.ui.theme.NewsAppTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -42,13 +44,17 @@ class MainActivity : ComponentActivity() {
                             TopNewsScreen(navController)
                         }
                         composable<searchNews> {
-                            SearchNews()
+                            SearchNews(navController)
                         }
                         composable<registerScreen> {
                             RegisterScreen(navController)
                         }
                         composable<savedNews>{
-                            SavedNewsScr()
+                            SavedNewsScr(navController)
+                        }
+                        composable<webView>{ backStakEntry ->
+                            val url  = backStakEntry.toRoute<webView>()
+                            webViewScreen(url.url)
                         }
                     }
                 }

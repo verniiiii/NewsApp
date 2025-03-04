@@ -17,3 +17,6 @@ object registerScreen
 
 @Serializable
 object  savedNews
+
+@Serializable
+data class webView(val url: String)

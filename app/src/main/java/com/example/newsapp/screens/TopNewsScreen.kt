@@ -29,6 +29,7 @@ import com.example.newsapp.savedNews
 import com.example.newsapp.searchNews
 import com.example.newsapp.topNewsScreen
 import com.example.newsapp.viewmodels.TopNewsViewModel
+import com.example.newsapp.webView
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -105,10 +106,7 @@ fun TopNewsScreen(
                 items(newArticle.value) { article ->
                     newsCard(
                         article,
-                        onClick = {},
-                        onMoreClick = {
-                            viewModel.addArticleToDb(article)
-                        }
+                        navController = navController
                     )
                 }
             }

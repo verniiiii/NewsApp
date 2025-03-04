@@ -27,9 +27,11 @@ import com.example.newsapp.viewmodels.TopNewsViewModel
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
 
 @Composable
 fun SearchNews(
+    navController: NavController,
     viewModel: TopNewsViewModel = koinViewModel()
 ){
         val newArticle = viewModel.findnewsArticleld.collectAsState()
@@ -79,8 +81,7 @@ fun SearchNews(
             {
                 items(newArticle.value){ article ->
                     newsCard(article,
-                        onClick = {},
-                        onMoreClick = {}
+                        navController = navController
                     )
                 }
             }
