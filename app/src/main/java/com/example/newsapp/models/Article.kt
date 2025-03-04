@@ -3,7 +3,7 @@ package com.example.newsapp.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "saved_articles")
 data class Article(
     val author: String?,
     val content: String?,
@@ -14,4 +14,5 @@ data class Article(
     @PrimaryKey
     val url: String,
     val urlToImage: String?,
+    var isFavorite: Boolean = false // Добавляем поле для избранного
 )

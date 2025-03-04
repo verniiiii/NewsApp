@@ -1,22 +1,18 @@
 package com.example.newsapp.viewmodels
 
+import NewsApi
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import com.example.newsapp.models.Article
 import com.example.newsapp.models.ConstValue
-import com.example.newsapp.models.NewsRespons
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 
-class topNewsViewModel(
+class TopNewsViewModel(
     private val newsApi : NewsApi
 ): ViewModel(){
 
