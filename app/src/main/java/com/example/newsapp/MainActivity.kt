@@ -10,6 +10,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.newsapp.data.UserPreferences
 import com.example.newsapp.screens.LoginScreen
 import com.example.newsapp.screens.RegisterScreen
+import com.example.newsapp.screens.SavedNewsScr
 import com.example.newsapp.screens.SearchNews
 import com.example.newsapp.screens.TopNewsScreen
 import com.example.newsapp.ui.theme.NewsAppTheme
@@ -45,6 +46,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<registerScreen> {
                             RegisterScreen(navController)
+                        }
+                        composable<savedNews>{
+                            SavedNewsScr()
                         }
                     }
                 }

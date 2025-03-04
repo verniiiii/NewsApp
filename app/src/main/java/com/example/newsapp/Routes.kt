@@ -14,3 +14,6 @@ object searchNews
 
 @Serializable
 object registerScreen
+
+@Serializable
+object  savedNews

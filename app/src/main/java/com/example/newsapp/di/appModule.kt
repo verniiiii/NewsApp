@@ -9,7 +9,7 @@ import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module{
-    viewModel{ TopNewsViewModel(get()) }
+    viewModel{ TopNewsViewModel(get(),get(),get()) }
     viewModel{ AuthViewModel(get<AppDatabase>(), get<UserPreferences>()) }
-    single { UserPreferences(get()) }
+    single { UserPreferences(get())}
 }

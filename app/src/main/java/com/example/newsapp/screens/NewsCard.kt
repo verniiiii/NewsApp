@@ -86,7 +86,8 @@ private fun CardShowPreview() {
         title = "Sample Article Title",
         url = "https://example.com",
         source = Source(id = "1", name = "Example Source"),
-        urlToImage = "https://via.placeholder.com/150"
+        urlToImage = "https://via.placeholder.com/150",
+        owner = 1
     )
 
     newsCard(article = article, onClick = { /* handle click */ }, onMoreClick = { /* handle save */ })
