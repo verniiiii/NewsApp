@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.example.newsapp.Conv
+import com.example.newsapp.models.Article
 
 @Database(entities = [User::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
@@ -25,4 +28,13 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
     }
+}
+
+@Database(
+    entities = [Article::class],
+    version = 1
+)
+@TypeConverters(Conv::class)
+abstract class  MainDb : RoomDatabase() {
+    abstract val dao : ArticleDao
 }

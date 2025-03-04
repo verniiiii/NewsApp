@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,7 +24,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.newsapp.data.UserPreferences
+import com.example.newsapp.loginScreen
+import com.example.newsapp.savedNews
+import com.example.newsapp.searchNews
+import com.example.newsapp.topNewsScreen
 import com.example.newsapp.viewmodels.TopNewsViewModel
+import com.example.newsapp.webView
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
@@ -33,8 +40,8 @@ import org.koin.compose.koinInject
 fun TopNewsScreen(
     navController: NavController,
     viewModel: TopNewsViewModel = koinViewModel(),
+    userPreferences: UserPreferences = koinInject()
 ) {
-    val userPreferences: UserPreferences = koinInject()
     val newArticle = viewModel.newsArticleld.collectAsState()
     val isLoading = viewModel.isLoading.collectAsState()
     var pages = rememberSaveable { mutableStateOf(1) }
@@ -44,40 +51,12 @@ fun TopNewsScreen(
         Log.i("FETCH", "START FIND")
         viewModel.fetchNews()
     }
-
-    val scope = rememberCoroutineScope()
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Главные новости") },
-                actions = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            userPreferences.clearUserId()
-                            navController.navigate("login_screen") {
-                                popUpTo("Top_news_screen") { inclusive = true }
-                            }
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Выход")
-                    }
-                    // Добавляем кнопку для перехода на экран поиска
-                    IconButton(onClick = {
-                        navController.navigate("search_news")
-                    }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Поиск")
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
         if (isLoading.value) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(paddingValues),
+                    .padding(top = 85.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -88,16 +67,15 @@ fun TopNewsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(paddingValues)
+                    .padding(top = 85.dp)
             ) {
                 items(newArticle.value) { article ->
                     newsCard(
                         article,
-                        onClick = {},
-                        onMoreClick = {}
+                        onNoteClick = {},
+                        navController = navController
                     )
                 }
             }
-        }
     }
 }

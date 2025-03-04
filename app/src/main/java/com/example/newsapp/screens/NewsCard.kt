@@ -1,13 +1,20 @@
 package com.example.newsapp.screens
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
@@ -20,21 +27,32 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.newsapp.R
 import com.example.newsapp.models.Article
 import com.example.newsapp.models.Source
+import com.example.newsapp.savedNews
+import com.example.newsapp.viewmodels.CardViewModel
+import com.example.newsapp.webView
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun newsCard(
     article: Article,
-    onClick: () -> Unit,
-    onMoreClick: () -> Unit,
+    viewModel: CardViewModel = koinViewModel(),
+    navController: NavController,
+    onNoteClick: () -> Unit
 ) {
 
+    val currentBackStack = navController.currentBackStackEntryAsState().value?.destination?.route
     Card(
         modifier = Modifier.padding(10.dp),
-        onClick = { onClick() }
+        onClick = {
+            navController.navigate(webView(article.url))
+        }
     ) {
         Column {
             // Показ изображения статьи
@@ -60,15 +78,44 @@ fun newsCard(
                 Spacer(modifier = Modifier.size(5.dp))
                 Text(text = article.description ?: "", color = Color.Gray)
 
-                // Кнопка для доп.действий
-                IconButton(onClick = { onMoreClick() }) {
-                    Icon(
-                        imageVector = Icons.Default.MoreVert,
-                        contentDescription = "More Actions",
-                        tint = Color.Blue
-                    )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ){
+                    IconButton(
+                        onClick = {
+                            if ( currentBackStack == savedNews::class.qualifiedName){
+                                viewModel.deleteArticle(article.url)
+                            }
+                            else viewModel.addArticleToDb(article)
+                        }) {
+                        Icon(
+                            imageVector = if (currentBackStack == savedNews::class.qualifiedName ) Icons.Default.Delete
+                            else Icons.Default.Add,
+                            contentDescription = "Add news",
+                            tint = Color.Blue
+                        )
+                    }
+                    IconButton(onClick = {
+                        //получаем сслыку
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Share News",
+                            tint = Color.Blue
+                        )
+                    }
+                    if (currentBackStack == savedNews::class.qualifiedName){
+                        IconButton(onClick = {
+                            onNoteClick()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Create,
+                                contentDescription = "Note",
+                                tint = Color.Blue
+                            )
+                        }
+                    }
                 }
-
             }
         }
     }
@@ -86,8 +133,10 @@ private fun CardShowPreview() {
         title = "Sample Article Title",
         url = "https://example.com",
         source = Source(id = "1", name = "Example Source"),
-        urlToImage = "https://via.placeholder.com/150"
+        urlToImage = "https://via.placeholder.com/150",
+        owner = 1,
+        note = null
     )
 
-    newsCard(article = article, onClick = { /* handle click */ }, onMoreClick = { /* handle save */ })
+    newsCard(article = article, onNoteClick = {}, navController = rememberNavController())
 }

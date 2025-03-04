@@ -27,62 +27,66 @@ import com.example.newsapp.viewmodels.TopNewsViewModel
 import org.koin.androidx.compose.koinViewModel
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.navigation.NavController
 
 @Composable
 fun SearchNews(
+    navController: NavController,
     viewModel: TopNewsViewModel = koinViewModel()
-){
-        val newArticle = viewModel.findnewsArticleld.collectAsState()
-        val isLoading = viewModel.isLoading.collectAsState()
-        var text by rememberSaveable { mutableStateOf("") }
+) {
+    val newArticle = viewModel.findnewsArticleld.collectAsState()
+    val isLoading = viewModel.isLoading.collectAsState()
+    var text by rememberSaveable { mutableStateOf("") }
 
-        if (isLoading.value) {
-            Column(
-                Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                CircularProgressIndicator(modifier = Modifier.size(50.dp))
-            }
-        }else{
+    if (isLoading.value) {
+        Column(
+            Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(top = 80.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator(modifier = Modifier.size(50.dp))
+        }
+    } else {
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(MaterialTheme.colorScheme.background)
+                .padding(top = 60.dp)
+        ) {
             Row(
                 modifier = Modifier
                     .background(MaterialTheme.colorScheme.background)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 OutlinedTextField(
                     value = text,
                     onValueChange = { text = it },
-                    label = {
-                        Text("Поиск")
-                    },
+                    label = { Text("Поиск") },
                     maxLines = 1,
                     modifier = Modifier
-                        .size(256.dp, 61.dp),
+                        .weight(1f)
                 )
                 Spacer(modifier = Modifier.size(10.dp))
-                Button(
-                    onClick = { viewModel.findNews(text) }
-                ) {
+                Button(onClick = { viewModel.findNews(text) }) {
                     Text("Поиск")
                 }
             }
-            Spacer(modifier = Modifier.size(15.dp))
+            Spacer(modifier = Modifier.size(5.dp))
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 75.dp)
-                    .background(MaterialTheme.colorScheme.background)
-            )
-            {
-                items(newArticle.value){ article ->
-                    newsCard(article,
-                        onClick = {},
-                        onMoreClick = {}
-                    )
+            ) {
+                items(newArticle.value) { article ->
+                    newsCard(article, onNoteClick = {}, navController = navController)
                 }
             }
         }
+    }
 }
