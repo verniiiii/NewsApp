@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Create
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Card
@@ -73,30 +75,40 @@ fun newsCard(
                 Spacer(modifier = Modifier.size(5.dp))
                 Text(text = article.description ?: "", color = Color.Gray)
 
-                // Кнопка для доп.действий
+
                 IconButton(
                     onClick = {
                         if ( currentBackStack == savedNews::class.qualifiedName){
                             viewModel.deleteArticle(article.url)
                         }
-                        else
-                    viewModel.addArticleToDb(article)
+                        else viewModel.addArticleToDb(article)
                 }) {
                     Icon(
-                        imageVector = if (currentBackStack == savedNews::class.qualifiedName ) Icons.Default.Clear
+                        imageVector = if (currentBackStack == savedNews::class.qualifiedName ) Icons.Default.Delete
                         else Icons.Default.Add,
                         contentDescription = "Add news",
                         tint = Color.Blue
                     )
                 }
                 IconButton(onClick = {
-                    viewModel.addArticleToDb(article)
+                    //получаем сслыку
                 }) {
                     Icon(
                         imageVector = Icons.Default.Email,
                         contentDescription = "Share News",
                         tint = Color.Blue
                     )
+                }
+                if (currentBackStack == savedNews::class.qualifiedName){
+                    IconButton(onClick = {
+
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Create,
+                            contentDescription = "Note",
+                            tint = Color.Blue
+                        )
+                    }
                 }
 
             }

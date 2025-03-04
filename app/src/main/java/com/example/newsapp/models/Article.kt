@@ -15,6 +15,6 @@ data class Article(
     val title: String?,
     val url: String,
     val urlToImage: String?,
-    val owner: Int
+    val owner: Int,
 )
 

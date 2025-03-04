@@ -40,8 +40,8 @@ import org.koin.compose.koinInject
 fun TopNewsScreen(
     navController: NavController,
     viewModel: TopNewsViewModel = koinViewModel(),
+    userPreferences: UserPreferences = koinInject()
 ) {
-    val userPreferences: UserPreferences = koinInject()
     val newArticle = viewModel.newsArticleld.collectAsState()
     val isLoading = viewModel.isLoading.collectAsState()
     var pages = rememberSaveable { mutableStateOf(1) }
@@ -51,46 +51,12 @@ fun TopNewsScreen(
         Log.i("FETCH", "START FIND")
         viewModel.fetchNews()
     }
-
-    val scope = rememberCoroutineScope()
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "Главные новости") },
-                actions = {
-                    IconButton(onClick = {
-                        scope.launch {
-                            userPreferences.clearUserId()
-                            navController.navigate(loginScreen) {
-                                popUpTo(topNewsScreen) { inclusive = true }
-                            }
-                        }
-                    }) {
-                        Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Выход")
-                    }
-                    // Добавляем кнопку для перехода на экран поиска
-                    IconButton(onClick = {
-                        navController.navigate(searchNews)
-                    }) {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = "Поиск")
-                    }
-                    // Добавляем кнопку для перехода на экран поиска
-                    IconButton(onClick = {
-                        navController.navigate(savedNews)
-                    }) {
-                        Icon(imageVector = Icons.Default.Favorite, contentDescription = "Сохр")
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
         if (isLoading.value) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(paddingValues),
+                    .padding(top = 85.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -101,7 +67,7 @@ fun TopNewsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(paddingValues)
+                    .padding(top = 85.dp)
             ) {
                 items(newArticle.value) { article ->
                     newsCard(
@@ -110,6 +76,5 @@ fun TopNewsScreen(
                     )
                 }
             }
-        }
     }
 }
