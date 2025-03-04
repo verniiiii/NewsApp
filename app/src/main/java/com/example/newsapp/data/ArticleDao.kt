@@ -19,4 +19,6 @@ interface ArticleDao {
     @Query("SELECT * FROM saved_articles WHERE owner = :owner")
     fun getAllByOwner(owner: Int): Flow<List<Article>>
 
+    @Query("UPDATE saved_articles SET note = :note WHERE url = :url AND owner = :owner")
+    suspend fun updateNote(url: String, owner: Int, note: String)
 }

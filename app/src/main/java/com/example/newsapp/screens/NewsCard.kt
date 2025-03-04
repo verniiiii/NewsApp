@@ -1,7 +1,9 @@
 package com.example.newsapp.screens
 
 import android.util.Log
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -41,7 +43,8 @@ import org.koin.androidx.compose.koinViewModel
 fun newsCard(
     article: Article,
     viewModel: CardViewModel = koinViewModel(),
-    navController: NavController
+    navController: NavController,
+    onNoteClick: () -> Unit
 ) {
 
     val currentBackStack = navController.currentBackStackEntryAsState().value?.destination?.route
@@ -75,42 +78,44 @@ fun newsCard(
                 Spacer(modifier = Modifier.size(5.dp))
                 Text(text = article.description ?: "", color = Color.Gray)
 
-
-                IconButton(
-                    onClick = {
-                        if ( currentBackStack == savedNews::class.qualifiedName){
-                            viewModel.deleteArticle(article.url)
-                        }
-                        else viewModel.addArticleToDb(article)
-                }) {
-                    Icon(
-                        imageVector = if (currentBackStack == savedNews::class.qualifiedName ) Icons.Default.Delete
-                        else Icons.Default.Add,
-                        contentDescription = "Add news",
-                        tint = Color.Blue
-                    )
-                }
-                IconButton(onClick = {
-                    //получаем сслыку
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = "Share News",
-                        tint = Color.Blue
-                    )
-                }
-                if (currentBackStack == savedNews::class.qualifiedName){
-                    IconButton(onClick = {
-
-                    }) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ){
+                    IconButton(
+                        onClick = {
+                            if ( currentBackStack == savedNews::class.qualifiedName){
+                                viewModel.deleteArticle(article.url)
+                            }
+                            else viewModel.addArticleToDb(article)
+                        }) {
                         Icon(
-                            imageVector = Icons.Default.Create,
-                            contentDescription = "Note",
+                            imageVector = if (currentBackStack == savedNews::class.qualifiedName ) Icons.Default.Delete
+                            else Icons.Default.Add,
+                            contentDescription = "Add news",
                             tint = Color.Blue
                         )
                     }
+                    IconButton(onClick = {
+                        //получаем сслыку
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Email,
+                            contentDescription = "Share News",
+                            tint = Color.Blue
+                        )
+                    }
+                    if (currentBackStack == savedNews::class.qualifiedName){
+                        IconButton(onClick = {
+                            onNoteClick()
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.Create,
+                                contentDescription = "Note",
+                                tint = Color.Blue
+                            )
+                        }
+                    }
                 }
-
             }
         }
     }
@@ -129,8 +134,9 @@ private fun CardShowPreview() {
         url = "https://example.com",
         source = Source(id = "1", name = "Example Source"),
         urlToImage = "https://via.placeholder.com/150",
-        owner = 1
+        owner = 1,
+        note = null
     )
 
-    newsCard(article = article,  navController = rememberNavController())
+    newsCard(article = article, onNoteClick = {}, navController = rememberNavController())
 }

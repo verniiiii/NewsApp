@@ -72,6 +72,7 @@ fun TopNewsScreen(
                 items(newArticle.value) { article ->
                     newsCard(
                         article,
+                        onNoteClick = {},
                         navController = navController
                     )
                 }

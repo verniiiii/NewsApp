@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -115,14 +117,9 @@ fun TopBar(
         },
         actions = {
             IconButton(onClick = {
-                scope.launch {
-                    userPreferences.clearUserId()
-                    navController.navigate(loginScreen) {
-                        popUpTo(topNewsScreen) { inclusive = true }
-                    }
-                }
+                navController.navigate(topNewsScreen)
             }) {
-                Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Выход")
+                Icon(imageVector = Icons.Default.Home, contentDescription = "Поиск")
             }
             IconButton(onClick = {
                 navController.navigate(searchNews)
@@ -134,6 +131,22 @@ fun TopBar(
             }) {
                 Icon(imageVector = Icons.Default.Favorite, contentDescription = "Сохр")
             }
+            IconButton(onClick = {
+                //открываем профиль
+            }) {
+                Icon(imageVector = Icons.Default.Person, contentDescription = "Профиль")
+            }
+            IconButton(onClick = {
+                scope.launch {
+                    userPreferences.clearUserId()
+                    navController.navigate(loginScreen) {
+                        popUpTo(topNewsScreen) { inclusive = true }
+                    }
+                }
+            }) {
+                Icon(imageVector = Icons.Default.ExitToApp, contentDescription = "Выход")
+            }
+
         }
     )
 }

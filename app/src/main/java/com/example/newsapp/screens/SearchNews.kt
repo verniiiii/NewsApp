@@ -84,7 +84,7 @@ fun SearchNews(
                     .fillMaxSize()
             ) {
                 items(newArticle.value) { article ->
-                    newsCard(article, navController = navController)
+                    newsCard(article, onNoteClick = {}, navController = navController)
                 }
             }
         }
