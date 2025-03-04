@@ -13,6 +13,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import android.util.Patterns
+import com.example.newsapp.loginScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -95,7 +96,7 @@ fun RegisterScreen(navController: NavController, authViewModel: AuthViewModel = 
                 if (validateInputs()) {
                     authViewModel.registerUser(login, password) { result ->
                         result.onSuccess {
-                            navController.navigate("login_screen")
+                            navController.navigate(loginScreen)
                         }.onFailure { error ->
                             registerError = error.message ?: "Ошибка регистрации"
                         }

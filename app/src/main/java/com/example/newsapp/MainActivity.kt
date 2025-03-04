@@ -27,23 +27,23 @@ class MainActivity : ComponentActivity() {
             val userId:Int? = userPreferences.userId.first() // ✅ Проверяем сохранённого пользователя
 
             // Переопределяем начальный экран в зависимости от наличия userId
-            val startDestination = if (userId != null) "Top_news_screen" else "login_screen"
+            val startDestination = if (userId != null) topNewsScreen else loginScreen
 
             setContent {
                 val darkThemeState = false
                 NewsAppTheme(darkTheme = darkThemeState) {
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = startDestination) {
-                        composable("login_screen") {
+                        composable<loginScreen>{
                             LoginScreen(navController)
                         }
-                        composable("Top_news_screen") {
+                        composable<topNewsScreen> {
                             TopNewsScreen(navController)
                         }
-                        composable("search_news") {
+                        composable<searchNews> {
                             SearchNews()
                         }
-                        composable("register_screen") {
+                        composable<registerScreen> {
                             RegisterScreen(navController)
                         }
                     }

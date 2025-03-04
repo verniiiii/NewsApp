@@ -13,6 +13,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.newsapp.registerScreen
+import com.example.newsapp.topNewsScreen
 
 import com.example.newsapp.viewmodels.AuthViewModel
 import org.koin.androidx.compose.koinViewModel
@@ -58,7 +60,7 @@ fun LoginScreen(
                 modifier = Modifier.size(143.dp, 51.dp),
                 shape = RectangleShape,
                 onClick = {
-                    navController.navigate("register_screen") // Переход к экрану регистрации
+                    navController.navigate(registerScreen) // Переход к экрану регистрации
                 }
             ) {
                 Text("To Register")
@@ -71,7 +73,7 @@ fun LoginScreen(
                     authViewModel.loginUser(loginText, passwordText) { result ->
                         result.onSuccess { message ->
                             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-                            navController.navigate("Top_news_screen")
+                            navController.navigate(topNewsScreen)
                         }.onFailure { error ->
                             Toast.makeText(context, error.message, Toast.LENGTH_SHORT).show()
                         }
