@@ -55,8 +55,8 @@ fun TopNewsScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.background)
-                    .padding(top = 85.dp),
+                    .background(MaterialTheme.colorScheme.background),
+                    //.padding(top = 85.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
@@ -67,7 +67,7 @@ fun TopNewsScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(MaterialTheme.colorScheme.background)
-                    .padding(top = 85.dp)
+                    //.padding(top = 85.dp)
             ) {
                 items(newArticle.value) { article ->
                     newsCard(

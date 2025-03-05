@@ -39,7 +39,7 @@ fun SavedNewsScr(
     var selectedArticle by remember { mutableStateOf<Article?>(null) }
     var noteText by rememberSaveable { mutableStateOf("") }
 
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(top = 100.dp, bottom = 20.dp)) {
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(bottom = 20.dp)) {
         items(savedArticles){
             article ->
             newsCard(article, navController = navController) {
