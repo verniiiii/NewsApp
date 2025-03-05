@@ -1,6 +1,10 @@
 package com.example.newsapp.screens
 
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +20,7 @@ import androidx.compose.material.icons.filled.Create
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,8 +52,9 @@ fun newsCard(
     navController: NavController,
     onNoteClick: () -> Unit
 ) {
-
     val currentBackStack = navController.currentBackStackEntryAsState().value?.destination?.route
+    val context = LocalContext.current // Вынесли контекст сюда
+
     Card(
         modifier = Modifier.padding(10.dp),
         onClick = {
@@ -80,31 +87,35 @@ fun newsCard(
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly
-                ){
+                ) {
                     IconButton(
                         onClick = {
-                            if ( currentBackStack == savedNews::class.qualifiedName){
+                            if (currentBackStack == savedNews::class.qualifiedName) {
                                 viewModel.deleteArticle(article.url)
-                            }
-                            else viewModel.addArticleToDb(article)
+                            } else viewModel.addArticleToDb(article)
                         }) {
                         Icon(
-                            imageVector = if (currentBackStack == savedNews::class.qualifiedName ) Icons.Default.Delete
+                            imageVector = if (currentBackStack == savedNews::class.qualifiedName) Icons.Default.Delete
                             else Icons.Default.Add,
                             contentDescription = "Add news",
                             tint = Color.Blue
                         )
                     }
                     IconButton(onClick = {
-                        //получаем сслыку
+                        val clipboardManager =
+                            context.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clipData = ClipData.newPlainText("News URL", article.url)
+                        clipboardManager.setPrimaryClip(clipData)
+
+                        Toast.makeText(context, "Ссылка скопирована!", Toast.LENGTH_SHORT).show()
                     }) {
                         Icon(
-                            imageVector = Icons.Default.Email,
-                            contentDescription = "Share News",
+                            imageVector = Icons.Default.Share,
+                            contentDescription = "Copy News URL",
                             tint = Color.Blue
                         )
                     }
-                    if (currentBackStack == savedNews::class.qualifiedName){
+                    if (currentBackStack == savedNews::class.qualifiedName) {
                         IconButton(onClick = {
                             onNoteClick()
                         }) {
@@ -120,6 +131,7 @@ fun newsCard(
         }
     }
 }
+
 
 @Composable
 @Preview
