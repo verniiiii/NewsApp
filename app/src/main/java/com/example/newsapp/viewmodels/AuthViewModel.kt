@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.User
 import com.example.newsapp.data.AppDatabase
-import com.example.newsapp.data.UserPreferences
 import kotlinx.coroutines.launch
 import org.koin.java.KoinJavaComponent.inject
 import java.security.MessageDigest

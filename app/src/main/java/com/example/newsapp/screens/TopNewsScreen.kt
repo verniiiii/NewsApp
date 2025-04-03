@@ -23,7 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.newsapp.data.UserPreferences
 import com.example.newsapp.loginScreen
 import com.example.newsapp.savedNews
 import com.example.newsapp.searchNews

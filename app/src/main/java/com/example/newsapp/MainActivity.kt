@@ -1,5 +1,6 @@
 package com.example.newsapp
 
+import UserPreferences
 import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -27,7 +28,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.newsapp.data.UserPreferences
 import com.example.newsapp.screens.LoginScreen
 import com.example.newsapp.screens.RegisterScreen
 import com.example.newsapp.screens.SavedNewsScr
@@ -44,8 +44,10 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Settings
 
 import androidx.compose.material3.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -68,15 +70,19 @@ class MainActivity : ComponentActivity() {
             val userId: Int? = userPreferences.userId.first()
             val startDestination = if (userId != null) topNewsScreen else loginScreen
 
+            val darkTheme = userPreferences.isDarkTheme.first()
+
             setContent {
+                val darkThemeState = userPreferences.isDarkTheme.collectAsState(initial = darkTheme)
                 val navController = rememberNavController()
                 val currentBackStackEntry = navController.currentBackStackEntryAsState()
                 val currentRoute = currentBackStackEntry.value?.destination?.route
+
                 val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                 val scope = rememberCoroutineScope()
 
                 NewsAppTheme(
-                    darkTheme = false
+                    darkTheme = darkThemeState.value
                 ) {
                     ModalNavigationDrawer(
                         drawerState = drawerState,
@@ -166,6 +172,14 @@ fun DrawerMenu(
         }
     }
 
+    val darkTheme = userPreferences.isDarkTheme.collectAsState(initial = false)
+
+    fun toggleTheme() {
+        scope.launch {
+            userPreferences.setDarkTheme(!darkTheme.value)
+        }
+    }
+    
     // Список пунктов меню
     val menuItems = listOf(
         MenuItem(
@@ -191,6 +205,12 @@ fun DrawerMenu(
             title = "Выход",
             icon = Icons.Default.ExitToApp,
             route = loginScreen
+        ),
+        MenuItem(
+            id = "theme",
+            title = if (darkTheme.value) "Светлая тема" else "Тёмная тема",
+            icon = Icons.Default.Settings,
+            route = ""
         )
     )
 
@@ -213,30 +233,49 @@ fun DrawerMenu(
         // Список пунктов меню
         LazyColumn {
             items(menuItems) { item ->
-                NavigationDrawerItem(
-                    label = { Text(item.title) },
-                    selected = false,
-                    onClick = {
-                        if (item.id == "logout") {
-                            scope.launch {
-                                userPreferences.clearUserId()
-                                navController.navigate(item.route) {
-                                    popUpTo(topNewsScreen) { inclusive = true }
+                if (item.id == "theme") {
+                    // Пункт меню для переключения темы
+                    NavigationDrawerItem(
+                        label = { Text(item.title) },
+                        selected = false,
+                        onClick = {
+                            toggleTheme() // Переключение темы
+                            closeDrawer()
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.title
+                            )
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                } else {
+                    NavigationDrawerItem(
+                        label = { Text(item.title) },
+                        selected = false,
+                        onClick = {
+                            if (item.id == "logout") {
+                                scope.launch {
+                                    userPreferences.clearUserId()
+                                    navController.navigate(item.route) {
+                                        popUpTo(topNewsScreen) { inclusive = true }
+                                    }
                                 }
+                            } else {
+                                navController.navigate(item.route)
                             }
-                        } else {
-                            navController.navigate(item.route)
-                        }
-                        closeDrawer()
-                    },
-                    icon = {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = item.title
-                        )
-                    },
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
+                            closeDrawer()
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = item.icon,
+                                contentDescription = item.title
+                            )
+                        },
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
             }
         }
     }
