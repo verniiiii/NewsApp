@@ -14,6 +14,8 @@ interface NewsApi {
         pageNumber : Int = 1,
         @Query("sortBy")
         published: String = "publishedAt",
+        @Query("category")
+        category: String = "",
         @Query("apiKey")
         apiKey: String = ConstValue.API_KEY
     ) : Response<NewsRespons>

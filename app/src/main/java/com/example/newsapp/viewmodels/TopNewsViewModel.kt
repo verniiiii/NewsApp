@@ -39,11 +39,11 @@ class TopNewsViewModel(
     val noresult : StateFlow<Boolean> = _noresult
 
 
-    fun fetchNews(page : Int = 1) {
+    fun fetchNews(page : Int = 1,category: String = "") {
         viewModelScope.launch {
             _isLoading.value = true
             try {
-                val response = newsApi.getNews(apiKey = ConstValue.API_KEY, pageNumber = page)
+                val response = newsApi.getNews(apiKey = ConstValue.API_KEY, pageNumber = page, category = category)
                 if (response.isSuccessful) {
                     response.body()?.let {
                         _newsArticleld.value = it.articles

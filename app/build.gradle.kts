@@ -4,8 +4,11 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     kotlin("plugin.serialization") version "2.0.21"
+    id("org.jetbrains.dokka")
 }
-
+tasks.dokkaHtml.configure {
+    outputDirectory.set(buildDir.resolve("dokka"))
+}
 android {
     namespace = "com.example.newsapp"
     compileSdk = 35
@@ -39,6 +42,7 @@ android {
     buildFeatures {
         compose = true
     }
+
 }
 
 dependencies {
