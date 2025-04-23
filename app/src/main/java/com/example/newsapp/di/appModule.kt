@@ -1,8 +1,9 @@
 package com.example.newsapp.di
 
 
+import SearchHistoryManager
+import UserPreferences
 import com.example.newsapp.data.AppDatabase
-import com.example.newsapp.data.UserPreferences
 import com.example.newsapp.viewmodels.AuthViewModel
 import com.example.newsapp.viewmodels.CardViewModel
 import com.example.newsapp.viewmodels.TopNewsViewModel
@@ -14,4 +15,5 @@ val appModule = module{
     viewModel{ CardViewModel(get(),get())}
     viewModel{ AuthViewModel(get<AppDatabase>(), get<UserPreferences>()) }
     single { UserPreferences(get())}
+    single { SearchHistoryManager(get())}
 }

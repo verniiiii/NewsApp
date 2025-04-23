@@ -3,7 +3,6 @@ package com.example.newsapp.viewmodels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.data.MainDb
-import com.example.newsapp.data.UserPreferences
 import com.example.newsapp.models.Article
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

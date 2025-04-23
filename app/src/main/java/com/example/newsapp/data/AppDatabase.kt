@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 import com.example.newsapp.Conv
 import com.example.newsapp.models.Article
 
-@Database(entities = [User::class], version = 1, exportSchema = false)
+@Database(entities = [User::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
@@ -32,7 +32,7 @@ abstract class AppDatabase : RoomDatabase() {
 
 @Database(
     entities = [Article::class],
-    version = 1
+    version = 2
 )
 @TypeConverters(Conv::class)
 abstract class  MainDb : RoomDatabase() {
